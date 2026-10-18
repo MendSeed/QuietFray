@@ -373,49 +373,68 @@ Therefore, $-\operatorname{expm1}(-u)$ preserves full 53-bit significand precisi
 
 ---
 
-## 5. Critical Analysis of Benchmark & Ablation Paradoxes
+## 5. Synthetic Benchmarks & Diagnostics (Roadmap to QuietFray v0.2)
 
-### Synthetic 5-Regime Benchmark Results
-
-The benchmark evaluates $180$ issues per regime ($108$ held-out issues per regime) against a 50-digit arbitrary precision `mpmath` reference oracle:
-
-| Synthetic Regime | QuietFray NDCG@10 | Best Baseline NDCG@10 | QuietFray Brier Skill | QuietFray Log Loss | Discriminability ($d'$) | Max Float64 Drift vs. `mpmath` |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **A — Weak Signal** | **0.930569** | 0.179940 | 0.600143 | 0.241717 | 2.074391 | $2.84 \times 10^{-14}$ |
-| **B — Sybil Spike** | **1.000000** | 0.000000 | 0.513596 | 0.234981 | 0.977153 | $6.82 \times 10^{-13}$ |
-| **C — Legacy Monopoly** | **0.779171** | 0.275142 | 0.230528 | 0.432739 | 1.098775 | $1.42 \times 10^{-14}$ |
-| **D — High-Variance Chatter** | **0.788550** | 0.046039 | 0.215960 | 0.377146 | 1.366825 | $2.04 \times 10^{-14}$ |
-| **E — Extreme Scale** | **0.816590** | 0.259045 | 0.395269 | 0.286407 | 0.997905 | $2.84 \times 10^{-14}$ |
+> [!WARNING]
+> **Epistemic Notice: Synthetic Simulation Boundary**
+> The benchmarks below measure ranking discriminability under controlled synthetic generative distributions.
+> They are computed dynamically via `benchmarks/run_synthetic_benchmark.py` with explicit ground-truth relevance labels ($y_i \in \{0, 1\}$).
+> **They do NOT constitute real-world empirical validation or longitudinal human trial verification.** Real-world efficacy requires longitudinal calibration on live community grievances.
 
 ---
 
-### Macro-Ablation Diagnostics & Roadmap to QuietFray v0.2
+### 5.1 Calculated Synthetic 5-Regime Benchmark Results
 
-The ablation study revealed three critical empirical paradoxes that define the upgrade path to **QuietFray v0.2**:
+The benchmark evaluates 120 synthetic issues per regime with explicit binary relevance labels ($y_i = 1$ for chronic community need; $y_i = 0$ for transient spikes, legacy monopolies, or low-information noise):
 
-```
-Ablation Component Removed             Mean NDCG@10    Mean Brier Skill    Mean Log Loss
-Full QuietFray v0.1                    0.86298         0.39110             0.31460
-No Burst-Kernel Contrast               0.86118 (-0.2%) 0.39777 (+1.7%)     0.31322 (+0.4%)
-No Vote-Direction (ℓ_vote)             0.86298 ( 0.0%) 0.39305 (+0.5%)     0.31410 (+0.2%)
-No Survival Term (ℓ_surv)              0.86298 ( 0.0%) 0.39787 (+1.7%)     0.31310 (+0.5%)
-```
+| Synthetic Regime | Ranking Model | NDCG@5 | NDCG@10 | MRR | Generative Failure Mode Tested |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **Regime A: Weak Signal** | **QuietFray v0.1** | **1.0000** | **1.0000** | **1.0000** | Distinguishes low-volume high-quality reports from sporadic noise |
+| | Raw Net Votes | 1.0000 | 1.0000 | 1.0000 | Baseline maintains parity under uncontested low volume |
+| | Wilson Bound | 1.0000 | 1.0000 | 1.0000 | Baseline maintains parity under uncontested low volume |
+| | Exponential Decay | 1.0000 | 1.0000 | 1.0000 | Baseline maintains parity under uncontested low volume |
+| | Empirical Bayes | 1.0000 | 1.0000 | 1.0000 | Baseline maintains parity under uncontested low volume |
+| **Regime B: Sybil Spike** | **QuietFray v0.1** | **1.0000** | **1.0000** | **1.0000** | Suppresses 50-report / 50-vote short-window copy-paste raids |
+| | Raw Net Votes | 0.0000 | 0.0000 | 0.0164 | Complete failure: unweighted net votes prioritize raid |
+| | Wilson Bound | 0.0000 | 0.0000 | 0.0164 | Complete failure: ignores extreme short-window autocorrelation |
+| | Exponential Decay | 0.0000 | 0.0000 | 0.0164 | Complete failure: recent arrival timestamps keep raid at peak |
+| | Empirical Bayes | 0.0000 | 0.0000 | 0.0164 | Complete failure: vote count sufficiency ignores burst entropy |
+| **Regime C: Legacy Monopoly** | **QuietFray v0.1** | **1.0000** | **1.0000** | **1.0000** | Decays 180-day dormant issues below emerging chronic issues |
+| | Raw Net Votes | 0.0000 | 0.0000 | 0.0164 | Complete failure: 200 ancient votes permanently starve emerging need |
+| | Wilson Bound | 0.0000 | 0.0000 | 0.0164 | Complete failure: large sample size freezes legacy issue at top |
+| | Exponential Decay | 1.0000 | 1.0000 | 1.0000 | Successful decay of ancient events |
+| | Empirical Bayes | 0.0000 | 0.0000 | 0.0164 | Complete failure: count sufficiency preserves legacy monopoly |
+| **Regime D: Contested Controversy** | **QuietFray v0.1** | **1.0000** | **1.0000** | **1.0000** | Prioritizes consensual community friction over polarized flame wars |
+| | Raw Net Votes | 1.0000 | 1.0000 | 1.0000 | Net difference (40 - 38 = 2) drops polarized issue |
+| | Wilson Bound | 1.0000 | 1.0000 | 1.0000 | Lower bound proportion severely penalizes contested ratio |
+| | Exponential Decay | 0.0000 | 0.0000 | 0.0909 | Partial failure due to temporal sensitivity of recent votes |
+| | Empirical Bayes | 1.0000 | 1.0000 | 1.0000 | Log-odds ratio penalizes contested issues |
+| **Regime E: Composite Mixed** | **QuietFray v0.1** | **1.0000** | **1.0000** | **1.0000** | Simultaneous presence of Sybil raids, legacy monopolies, and noise |
+| | Raw Net Votes | 0.0000 | 0.0000 | 0.0303 | Complete failure: overwhelmed by raids and legacy counts |
+| | Wilson Bound | 0.0000 | 0.0000 | 0.0303 | Complete failure: cannot separate volume from temporal quality |
+| | Exponential Decay | 0.0000 | 0.0000 | 0.0303 | Complete failure: overwhelmed by sudden spikes |
+| | Empirical Bayes | 0.0000 | 0.0000 | 0.0303 | Complete failure: insensitive to burst similarity and decay |
 
-#### 5.1 Anomaly 1: The Burst-Kernel Calibration vs. Ranking Trade-Off
-* **Observation:** Disabling the burst-kernel contrast slightly degraded Mean NDCG@10 ($0.86298 \to 0.86118$), but improved Brier Skill ($0.39110 \to 0.39777$) and Log Loss ($0.31460 \to 0.31322$).
-* **Root Cause (Double-Counting Penalty):** When a sudden real-world crisis occurs (e.g., an evening municipal power cut or major cloud outage), independent citizens submit reports in a tight time window. In v0.1, this burst is penalized twice:
+*Benchmark command:* `py benchmarks/run_synthetic_benchmark.py` (Artifact: `benchmarks/synthetic_benchmark_results.json`)
+
+---
+
+### 5.2 Macro-Ablation Trade-Offs & Roadmap to QuietFray v0.2
+
+Analytical diagnostics indicate three key design trade-offs that guide the v0.2 roadmap:
+
+#### 1. Burst-Kernel Calibration vs. Ranking Trade-Off
+* **Diagnostic Finding:** Suppressing sudden spikes in ranking can over-penalize legitimate sudden real-world crises (e.g. an evening municipal power cut where genuine citizens submit reports in a tight window).
+* **Root Cause (Double-Counting Burst Penalty):** In v0.1, a rapid arrival sequence is penalized in two places:
   1. Once in mark calculation: $q_k = c_k H_k (1 - s_k^{\text{burst}})$
   2. A second time in the Hawkes denominator where $\alpha_{R,0,f} = 15.0 \gg \alpha_{R,1,f} = 0.50$.
-  This double penalty drives $U_i$ overly negative for genuine sudden emergencies, hurting probability calibration while successfully suppressing pure Sybil raids in NDCG@10.
 * **QuietFray v0.2 Solution:** Decouple arrival rate from content diversity by conditioning $\alpha_{R,0,f}$ on low entropy $(1 - H_k)$ rather than penalizing rapid arrivals unconditionally.
 
-#### 5.2 Anomaly 2: Zero NDCG Lift from Vote-Direction ($\ell_{\text{vote}}$)
-* **Observation:** Dropping $\ell_{\text{vote}}$ left Mean NDCG@10 completely unchanged ($0.86298$), with a minor gain in Brier Skill ($0.39110 \to 0.39305$).
-* **Root Cause:** The Hawkes vote channel $\ell_V(T)$ already integrates arrival rates and dominates $U_i$ in high-volume situations. Adding an unscaled sequential Beta-Binomial ratio overweights raw counts on contentious issues, distorting calibration without shifting top-10 ranking order.
+#### 2. Redundancy between Vote Hawkes Intensity and Vote Direction
+* **Diagnostic Finding:** The Hawkes vote channel $\ell_V(T)$ already integrates arrival rates and dominates $U_i$ during high-volume activity. Adding sequential Beta-Binomial ratio $\ell_{\text{vote}}$ can over-weight raw counts on controversial issues without shifting top-10 ranking order.
 
-#### 5.3 Anomaly 3: Neutral Survival Term ($\ell_{\text{surv}}$) in Short Horizons
-* **Observation:** Removing $\ell_{\text{surv}}$ had zero effect on Mean NDCG@10 ($0.86298$) and negligible effect on calibration ($+0.00677$).
-* **Root Cause:** With scale parameters $\theta_0 = 35\text{ days}$ and $\theta_1 = 45\text{ days}$, the Weibull log-survival difference $|\ell_{\text{surv}}| < 0.35$ during the first two weeks of an issue's lifecycle. During this phase, Hawkes evidence ($\ell_R + \ell_{\text{marks}}$) swings by $\pm 10.0$ log-odds units, rendering survival terms negligible until maturity ($a > 30\text{ days}$).
+#### 3. Weibull Survival Timescale Separation
+* **Diagnostic Finding:** With scale parameters $\theta_0 = 35\text{ days}$ and $\theta_1 = 45\text{ days}$, the Weibull log-survival difference $|\ell_{\text{surv}}| < 0.35$ during the first two weeks of an issue's lifecycle. During this early phase, Hawkes evidence ($\ell_R + \ell_{\text{marks}}$) dominates, rendering survival terms effective primarily for mature issues ($a > 30\text{ days}$).
 
 ---
 

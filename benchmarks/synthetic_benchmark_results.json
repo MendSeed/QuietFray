@@ -1,0 +1,142 @@
+{
+  "benchmark_type": "Synthetic Controlled Simulation",
+  "model_version": "QuietFray v0.1",
+  "notice": "These metrics represent synthetic benchmarks over simulated arrival distributions. They do NOT constitute real-world empirical validation or longitudinal human trials.",
+  "regimes": {
+    "Regime_A_Weak_Signal": {
+      "QuietFray_v0.1": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Raw_Net_Votes": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Wilson_Bound": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Exponential_Decay": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Empirical_Bayes": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      }
+    },
+    "Regime_B_Sybil_Spike": {
+      "QuietFray_v0.1": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Raw_Net_Votes": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0164
+      },
+      "Wilson_Bound": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0164
+      },
+      "Exponential_Decay": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0164
+      },
+      "Empirical_Bayes": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0164
+      }
+    },
+    "Regime_C_Legacy_Monopoly": {
+      "QuietFray_v0.1": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Raw_Net_Votes": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0164
+      },
+      "Wilson_Bound": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0164
+      },
+      "Exponential_Decay": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Empirical_Bayes": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0164
+      }
+    },
+    "Regime_D_Contested_Controversy": {
+      "QuietFray_v0.1": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Raw_Net_Votes": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Wilson_Bound": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Exponential_Decay": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0909
+      },
+      "Empirical_Bayes": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      }
+    },
+    "Regime_E_Composite_Mixed": {
+      "QuietFray_v0.1": {
+        "NDCG@5": 1.0,
+        "NDCG@10": 1.0,
+        "MRR": 1.0
+      },
+      "Raw_Net_Votes": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0303
+      },
+      "Wilson_Bound": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0303
+      },
+      "Exponential_Decay": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0303
+      },
+      "Empirical_Bayes": {
+        "NDCG@5": 0.0,
+        "NDCG@10": 0.0,
+        "MRR": 0.0303
+      }
+    }
+  }
+}

@@ -1,0 +1,474 @@
+{
+  "version": "0.1.0",
+  "model": "QuietFray v0.1",
+  "description": "Standard cross-language reference test vectors for MendSeed platform implementations.",
+  "config": {
+    "tau_f": 0.02,
+    "tau_s": 3.0,
+    "alpha_v_h0": [
+      12.0,
+      0.025
+    ],
+    "alpha_v_h1": [
+      0.35,
+      0.16
+    ],
+    "alpha_r_h0": [
+      15.0,
+      0.02
+    ],
+    "alpha_r_h1": [
+      0.5,
+      0.18
+    ],
+    "mu_vote": 0.05,
+    "mu_report": 0.02,
+    "vote_a0": 2.0,
+    "vote_b0": 2.0,
+    "vote_a1": 7.0,
+    "vote_b1": 3.0,
+    "weibull_h0": [
+      1.05,
+      35.0
+    ],
+    "weibull_h1": [
+      0.75,
+      45.0
+    ],
+    "reopen_p1": 0.7,
+    "reopen_p0": 0.2
+  },
+  "cases": [
+    {
+      "id": "cold_start_neutral",
+      "description": "Evaluation of brand new issue with zero events under default 0.3 prior.",
+      "events": [],
+      "expected_final_state": {
+        "last_t_days": 0.0,
+        "vote_x_fast": 0.0,
+        "vote_x_slow": 0.0,
+        "report_x_fast": 0.0,
+        "report_x_slow": 0.0,
+        "vote_log_lr": 0.0,
+        "report_log_lr": 0.0,
+        "report_mark_log_lr": 0.0,
+        "vote_dir_log_lr": 0.0,
+        "reopen_log_lr": 0.0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "reopens": 0
+      },
+      "evaluations": [
+        {
+          "current_age_days": 0.0,
+          "category_prior": 0.3,
+          "unified_log_odds": -0.84729786,
+          "posterior_prob_h1": 0.3
+        }
+      ]
+    },
+    {
+      "id": "single_report_high_quality",
+      "description": "Single high-confidence diverse report with low burst similarity.",
+      "events": [
+        {
+          "type": "report",
+          "t_days": 1.5,
+          "confidence": 0.92,
+          "diversity": 0.85,
+          "burst_similarity": 0.1,
+          "mark_q": 0.7038
+        }
+      ],
+      "expected_final_state": {
+        "last_t_days": 1.5,
+        "vote_x_fast": 0.0,
+        "vote_x_slow": 0.0,
+        "report_x_fast": 0.7038,
+        "report_x_slow": 0.7038,
+        "vote_log_lr": 0.0,
+        "report_log_lr": 0.0,
+        "report_mark_log_lr": 25.01728117,
+        "vote_dir_log_lr": 0.0,
+        "reopen_log_lr": 0.0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "reopens": 0
+      },
+      "evaluations": [
+        {
+          "current_age_days": 2.0,
+          "category_prior": 0.3,
+          "unified_log_odds": 24.12270939,
+          "posterior_prob_h1": 1.0
+        }
+      ]
+    },
+    {
+      "id": "steady_chronic_need",
+      "description": "5-day sustained sequence of reports and upvotes with steady persistence.",
+      "events": [
+        {
+          "type": "report",
+          "t_days": 1.0,
+          "confidence": 0.9,
+          "diversity": 0.8,
+          "burst_similarity": 0.15,
+          "mark_q": 0.612
+        },
+        {
+          "type": "vote",
+          "t_days": 1.2,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 2.0,
+          "confidence": 0.9,
+          "diversity": 0.8,
+          "burst_similarity": 0.15,
+          "mark_q": 0.612
+        },
+        {
+          "type": "vote",
+          "t_days": 2.2,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 3.0,
+          "confidence": 0.9,
+          "diversity": 0.8,
+          "burst_similarity": 0.15,
+          "mark_q": 0.612
+        },
+        {
+          "type": "vote",
+          "t_days": 3.2,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 4.0,
+          "confidence": 0.9,
+          "diversity": 0.8,
+          "burst_similarity": 0.15,
+          "mark_q": 0.612
+        },
+        {
+          "type": "vote",
+          "t_days": 4.2,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 5.0,
+          "confidence": 0.9,
+          "diversity": 0.8,
+          "burst_similarity": 0.15,
+          "mark_q": 0.612
+        },
+        {
+          "type": "vote",
+          "t_days": 5.2,
+          "is_upvote": true
+        }
+      ],
+      "expected_final_state": {
+        "last_t_days": 5.2,
+        "vote_x_fast": 1.0,
+        "vote_x_slow": 2.86142501,
+        "report_x_fast": 2.778e-05,
+        "report_x_slow": 1.63825245,
+        "vote_log_lr": 4.57367863,
+        "report_log_lr": 6.1903637,
+        "report_mark_log_lr": 101.89407123,
+        "vote_dir_log_lr": 0.76725515,
+        "reopen_log_lr": 0.0,
+        "upvotes": 5,
+        "downvotes": 0,
+        "reopens": 0
+      },
+      "evaluations": [
+        {
+          "current_age_days": 6.0,
+          "category_prior": 0.3,
+          "unified_log_odds": 112.51438021,
+          "posterior_prob_h1": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sybil_burst_short_window",
+      "description": "10 reports arriving within minutes with high burst similarity and low diversity.",
+      "events": [
+        {
+          "type": "report",
+          "t_days": 10.0,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00005,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.0005,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00055,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.001,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00105,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.0015,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00155,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.002,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00205,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.0025,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00255,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.003,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00305,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.0035,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00355,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.004,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00405,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 10.0045,
+          "confidence": 0.6,
+          "diversity": 0.2,
+          "burst_similarity": 0.95,
+          "mark_q": 0.006
+        },
+        {
+          "type": "vote",
+          "t_days": 10.00455,
+          "is_upvote": true
+        }
+      ],
+      "expected_final_state": {
+        "last_t_days": 10.00455,
+        "vote_x_fast": 8.95902911,
+        "vote_x_slow": 9.99250396,
+        "report_x_fast": 0.05361996,
+        "report_x_slow": 0.05995402,
+        "vote_log_lr": -27.72292608,
+        "report_log_lr": -20.55878683,
+        "report_mark_log_lr": -238.45773588,
+        "vote_dir_log_lr": 0.81264872,
+        "reopen_log_lr": 0.0,
+        "upvotes": 10,
+        "downvotes": 0,
+        "reopens": 0
+      },
+      "evaluations": [
+        {
+          "current_age_days": 10.5,
+          "category_prior": 0.3,
+          "unified_log_odds": -286.82734884,
+          "posterior_prob_h1": 0.0
+        }
+      ]
+    },
+    {
+      "id": "contested_votes_and_reopen",
+      "description": "Mixed upvotes, downvotes, and a verified solution failure (reopen).",
+      "events": [
+        {
+          "type": "vote",
+          "t_days": 1.0,
+          "is_upvote": true
+        },
+        {
+          "type": "vote",
+          "t_days": 1.1,
+          "is_upvote": false
+        },
+        {
+          "type": "vote",
+          "t_days": 1.2,
+          "is_upvote": false
+        },
+        {
+          "type": "reopen",
+          "t_days": 2.0
+        }
+      ],
+      "expected_final_state": {
+        "last_t_days": 2.0,
+        "vote_x_fast": 1.00678335,
+        "vote_x_slow": 2.90272309,
+        "report_x_fast": 0.0,
+        "report_x_slow": 0.0,
+        "vote_log_lr": 1.40462503,
+        "report_log_lr": 0.0,
+        "report_mark_log_lr": 0.0,
+        "vote_dir_log_lr": -0.45198512,
+        "reopen_log_lr": 1.25276297,
+        "upvotes": 1,
+        "downvotes": 2,
+        "reopens": 1
+      },
+      "evaluations": [
+        {
+          "current_age_days": 3.0,
+          "category_prior": 0.3,
+          "unified_log_odds": 1.3027121,
+          "posterior_prob_h1": 0.78629107
+        }
+      ]
+    },
+    {
+      "id": "typescript_conformance_parity",
+      "description": "Direct conformance benchmark matching MendSeed TypeScript test suite in `model.test.ts`.",
+      "events": [
+        {
+          "type": "report",
+          "t_days": 0.2,
+          "confidence": 0.8,
+          "diversity": 0.7,
+          "burst_similarity": 0.1
+        },
+        {
+          "type": "vote",
+          "t_days": 0.5,
+          "is_upvote": true
+        },
+        {
+          "type": "vote",
+          "t_days": 1.2,
+          "is_upvote": true
+        },
+        {
+          "type": "report",
+          "t_days": 3.5,
+          "confidence": 0.9,
+          "diversity": 0.6,
+          "burst_similarity": 0.05
+        },
+        {
+          "type": "vote",
+          "t_days": 5.0,
+          "is_upvote": false
+        },
+        {
+          "type": "vote",
+          "t_days": 7.8,
+          "is_upvote": true
+        }
+      ],
+      "expected_final_state": {
+        "last_t_days": 7.8,
+        "vote_x_fast": 1.0,
+        "vote_x_slow": 1.59178774,
+        "report_x_fast": 0.0,
+        "report_x_slow": 0.16237148,
+        "vote_log_lr": 2.1923106,
+        "report_log_lr": 0.64985911,
+        "report_mark_log_lr": 44.88333436,
+        "vote_dir_log_lr": 0.43305306,
+        "reopen_log_lr": 0.0,
+        "upvotes": 3,
+        "downvotes": 1,
+        "reopens": 0
+      },
+      "evaluations": [
+        {
+          "current_age_days": 10.0,
+          "category_prior": 0.3,
+          "current_horizon_days": 12.0,
+          "has_reopen": false,
+          "unified_log_odds": 45.96371716,
+          "posterior_prob_h1": 1.0
+        }
+      ]
+    }
+  ]
+}
