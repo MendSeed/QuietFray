@@ -6,7 +6,7 @@
 | **Attribute** | **Specification** |
 | :--- | :--- |
 | **Target Platform** | **MendSeed** (Opportunity & Grievance Observatory) |
-| **AI Extraction & Semantic Layer** | `Qwen/Qwen2.5-3B-Instruct` (4-bit NF4 QLoRA) + `BAAI/bge-small-en-v1.5` |
+| **AI Extraction & Semantic Layer** | `Qwen/Qwen3-4B-Instruct-2507` (4-bit NF4 QLoRA) + `BAAI/bge-small-en-v1.5` |
 | **Mathematical Runtime** | `QuietFlayEngine` (Zero-Dependency Pure-Python $O(1)$ Streaming Core) |
 | **Model Version** | `v0.1` (`quietflay-v0.1`) |
 | **Numerical Precision** | Double Precision (IEEE-754 `float64`), drift $< 10^{-12}$ vs. 50-digit `mpmath` |
@@ -25,7 +25,7 @@ Crowdsourced grievance and ideation platforms face a fundamental information-ret
 - $\mathcal{H}_1$: **Persistent, Unmet Community Need**
 - $\mathcal{H}_0$: **Transient Viral Spike, Coordinated Manipulation, or Low-Information Noise**
 
-By coupling a dual-kernel marked Hawkes process ($\tau_f = 0.02\text{ days} \approx 28.8\text{ min}$, $\tau_s = 3.0\text{ days} = 72\text{ hours}$) with AI-extracted semantic quality marks from `Qwen/Qwen2.5-3B-Instruct`, sequential Beta-Binomial vote updates, Empirical-Bayes category priors, and Weibull survival dynamics, QuietFray maintains an exact, constant-size $O(1)$ per-event state update with zero historical replay requirement.
+By coupling a dual-kernel marked Hawkes process ($\tau_f = 0.02\text{ days} \approx 28.8\text{ min}$, $\tau_s = 3.0\text{ days} = 72\text{ hours}$) with AI-extracted semantic quality marks from `Qwen/Qwen3-4B-Instruct-2507`, sequential Beta-Binomial vote updates, Empirical-Bayes category priors, and Weibull survival dynamics, QuietFray maintains an exact, constant-size $O(1)$ per-event state update with zero historical replay requirement.
 
 ### Epistemic Boundary Formulation
 To preserve scientific rigor, this specification explicitly establishes boundaries across three domains:
@@ -204,7 +204,7 @@ $$x_{m,k}(t) = \sum_{j: t_j < t} q_{m,j} \exp\left(-\frac{t - t_j}{\tau_k}\right
 
 ### 3.3 Endogenous AI Report Marks ($q_{R,k}$) and Mark Evidence ($\ell_{\text{marks}}$)
 
-While votes carry unit excitation marks ($q_{V,j} = 1$), each incoming Problem Report $r_k$ is parsed by `Qwen/Qwen2.5-3B-Instruct` and `BAAI/bge-small-en-v1.5` to yield three bounded scalars:
+While votes carry unit excitation marks ($q_{V,j} = 1$), each incoming Problem Report $r_k$ is parsed by `Qwen/Qwen3-4B-Instruct-2507` and `BAAI/bge-small-en-v1.5` to yield three bounded scalars:
 
 1. **Extraction Confidence ($c_k \in [0, 1]$):** Structural completeness from `IssueAnalysis.confidence`.
 2. **Lexical & Semantic Diversity ($H_k \in [0, 1]$):** Vocabulary entropy and description richness.
@@ -457,7 +457,7 @@ sequenceDiagram
 
     Worker->>DB: Poll Pending Outbox Tasks
     Worker->>AI: Fetch Embeddings & Struct Extraction
-    Note over AI: STAGE 2: AI Pipeline<br/>• BGE-small: s_k^canon & s_k^burst<br/>• Qwen2.5-3B: IssueAnalysis & MergeProposal
+    Note over AI: STAGE 2: AI Pipeline<br/>• BGE-small: s_k^canon & s_k^burst<br/>• Qwen3-4B: IssueAnalysis & MergeProposal
     AI-->>Worker: JSON {confidence, diversity, s_canon, s_burst}
 
     alt New Root Problem (s_canon < threshold)
